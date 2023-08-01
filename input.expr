@@ -1,0 +1,12 @@
+programa
+inteiro a;
+real b, c;
+texto texto1, texto2;
+
+c := (a + b)*9;
+
+faca {
+    escreva(d);
+}enquanto(a > b && (c > b || b > a))
+
+fimprog.
