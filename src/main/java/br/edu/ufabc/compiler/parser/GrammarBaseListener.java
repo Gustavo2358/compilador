@@ -3,6 +3,7 @@ package br.edu.ufabc.compiler.parser;
 
 	import java.util.ArrayList;
 	import br.edu.ufabc.compiler.symbols.*;
+	import br.edu.ufabc.compiler.expression.*;
 
 
 
@@ -233,6 +234,18 @@ public class GrammarBaseListener implements GrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTermo(GrammarParser.TermoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTermol(GrammarParser.TermolContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTermol(GrammarParser.TermolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

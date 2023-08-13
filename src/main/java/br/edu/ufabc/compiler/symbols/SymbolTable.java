@@ -1,6 +1,7 @@
 package br.edu.ufabc.compiler.symbols;
 
 import br.edu.ufabc.compiler.exception.SemanticException;
+import br.edu.ufabc.compiler.expression.Expression;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -20,7 +21,12 @@ public class SymbolTable {
     public void declareVariable(String name, DataType type) {
         if(exists(name))
             throw new SemanticException(String.format("A variável '%s' ja foi definida.", name));
-        this.symbols.put(name, new Identifier(name, type));
+        this.symbols.put(name, new Identifier(name, type, null));
+    }
+
+    public void setVariableValue(String name, Expression expression){
+        Identifier identifier = get(name);
+        this.symbols.put(name, new Identifier(identifier.getName(), identifier.getType(), expression.eval()));
     }
 
     public void checkUsage(String name){

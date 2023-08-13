@@ -3,6 +3,7 @@ package br.edu.ufabc.compiler.parser;
 
 	import java.util.ArrayList;
 	import br.edu.ufabc.compiler.symbols.*;
+	import br.edu.ufabc.compiler.expression.*;
 
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -192,6 +193,16 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTermo(GrammarParser.TermoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#termol}.
+	 * @param ctx the parse tree
+	 */
+	void enterTermol(GrammarParser.TermolContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#termol}.
+	 * @param ctx the parse tree
+	 */
+	void exitTermol(GrammarParser.TermolContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#fator}.
 	 * @param ctx the parse tree

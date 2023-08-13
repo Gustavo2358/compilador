@@ -3,10 +3,11 @@ inteiro a;
 real b, c;
 texto texto1, texto2;
 
-c := (a + b)*9;
+c := 2 + 3 - (4 * (3 + 2.2*3));
+b := "texto";
 
 faca {
-    escreva(d);
+    escreva(c);
 }enquanto(a > b && (c > b || b > a))
 
 fimprog.

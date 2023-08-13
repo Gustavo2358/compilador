@@ -1,20 +1,17 @@
 package br.edu.ufabc.compiler.symbols;
 
-public class Identifier {
+public class Identifier{
     private final String name;
     private final DataType type;
-    private final Integer value;
+    private final String value;
 
-    public Identifier(String text, DataType type) {
-        this.name = text;
-        this.type = type;
-        this.value = null;
-    }
-
-    public Identifier(String text, DataType type, Integer value) {
-        this.name = text;
+    public Identifier(String name, DataType type, String value) {
+        this.name = name;
         this.type = type;
         this.value = value;
+    }
+    public Identifier(String name, DataType type) {
+        this(name, type, null);
     }
 
     public String getName() {
@@ -25,7 +22,7 @@ public class Identifier {
         return type;
     }
 
-    public Integer getValue() {
+    public String getValue() {
         return value;
     }
 
