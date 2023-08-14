@@ -1,10 +1,18 @@
 programa
+
 inteiro a;
 real b, c;
-texto texto1, texto2;
+texto texto1;
+logico bool1, bool2, bool3;
 
 c := 2 + 3 - (4 * (3 + 2.2*3));
 b := "texto";
+
+b := c;
+a := c;
+bool1 := a > b && (c > b || c > b);
+bool2 := 1 >= 2;
+bool3 := VERDADEIRO || (FALSO && VERDADEIRO);
 
 faca {
     escreva(c);

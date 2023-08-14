@@ -1,5 +1,7 @@
 package br.edu.ufabc.compiler.symbols;
 
+import java.util.Optional;
+
 public class Identifier{
     private final String name;
     private final DataType type;
@@ -22,8 +24,8 @@ public class Identifier{
         return type;
     }
 
-    public String getValue() {
-        return value;
+    public Optional<String> getValue() {
+        return Optional.ofNullable(value);
     }
 
     @Override

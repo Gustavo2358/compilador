@@ -11,7 +11,7 @@ public class SymbolTable {
     private final HashMap<String, Identifier> symbols;
 
     public SymbolTable() {
-        this.symbols = new HashMap<String, Identifier>();
+        this.symbols = new HashMap<>();
     }
 
     public Identifier get(String key) {
@@ -21,7 +21,7 @@ public class SymbolTable {
     public void declareVariable(String name, DataType type) {
         if(exists(name))
             throw new SemanticException(String.format("A variável '%s' ja foi definida.", name));
-        this.symbols.put(name, new Identifier(name, type, null));
+        this.symbols.put(name, new Identifier(name, type));
     }
 
     public void setVariableValue(String name, Expression expression){
@@ -39,9 +39,8 @@ public class SymbolTable {
     }
 
     public void checkInitialization(String name){
-        if(Objects.isNull(this.symbols.get(name).getValue()))
+        if(this.symbols.get(name).getValue().isEmpty())
             throw new SemanticException(String.format("A variável '%s' não foi inicializada.", name));
-
     }
 
     public boolean exists(String key) {

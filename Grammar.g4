@@ -43,6 +43,7 @@ declaravar : tipo ID { symbolTable.declareVariable(_input.LT(-1).getText(), curr
 tipo     : 'real' { currentType = DataType.REAL; }
          | 'inteiro' { currentType = DataType.INTEIRO; }
          | 'texto' { currentType = DataType.TEXTO; }
+         | 'logico' { currentType = DataType.LOGICO; }
          ;
 
 bloco    : (cmd)+
@@ -76,7 +77,12 @@ cmdAttr  : ID{
                 leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
              }
            ':='
-           (expr
+           (
+           LOGICO { expression = new BooleanExpression(_input.LT(-1).getText().equals("VERDADEIRO")); }
+           |
+           expr
+           |
+           exprBool
            |
            TEXTO { expression = new TextExpression(_input.LT(-1).getText()); })
             {
@@ -94,21 +100,46 @@ cmdWhile : 'enquanto' AP exprBool FP '{' bloco '}'
 cmdDoWhile : 'faca' '{' bloco '}' 'enquanto' AP exprBool FP
            ;
 
-exprBool : exprBooll (OP_BOOL exprBooll)*
+exprBool : (exprBooll) (
+            OP_BOOL
+            {
+                String operator = _input.LT(-1).getText().split(" ")[0];
+                BinaryExpression _exprBool = new BinaryExpression(operator);
+                _exprBool.setLeftSide(expression);
+            }
+            (exprBooll)
+            {
+                _exprBool.setRightSide(expression);
+                expression = _exprBool;
+            }
+            )*
          ;
 
 exprBooll : AP exprBool FP
+          | LOGICO { expression = new BooleanExpression(_input.LT(-1).getText().equals("VERDADEIRO"));}
           | exprRel
           ;
 
-exprRel  : expr OP_REL expr
+exprRel  : expr
+           OP_REL
+            {
+                String operator = _input.LT(-1).getText().split(" ")[0];
+                BinaryExpression _exprRel = new BinaryExpression(operator);
+                _exprRel.setLeftSide(expression);
+            }
+           expr
+            {
+                _exprRel.setRightSide(expression);
+                expression = _exprRel;
+            }
          ;
 
 expr	 : termo
          | termo exprl+
          ;
 
-exprl	 : OP_ADD {
+exprl	 : OP_ADD
+        {
             String operator = _input.LT(-1).getText().split(" ")[0];
             BinaryExpression _exprADD = new BinaryExpression(operator);
             _exprADD.setLeftSide(expression);
@@ -136,7 +167,13 @@ termol   : OP_MULT {
           }
           ;
 
-fator    : ID   {listaDeTokens.add(_input.LT(-1).getText());}
+fator    : ID   {
+                    listaDeTokens.add(_input.LT(-1).getText());
+                    symbolTable.checkUsage(_input.LT(-1).getText());
+                    Identifier id = symbolTable.get(_input.LT(-1).getText());
+                    expression = new IdentifierExpression(id.getValue().get());
+
+                }
          | num
          | AP expr FP
          ;
@@ -155,9 +192,6 @@ OP_REL   : '>' | '<' | '>=' | '<=' | '==' | '!='
 OP_BOOL  : '&&' | '||'
          ;
 
-ID		 : [a-zA-Z] ([a-zA-Z0-9])*
-		 ;
-
 TEXTO    : ["] .*? ["]
          ;
 
@@ -169,6 +203,12 @@ INTEGER  : [0-9]+
          ;
 
 REAL     : [0-9]+ ('.' [0-9]+)?
+		 ;
+
+LOGICO   : 'VERDADEIRO' | 'FALSO'
+		 ;
+
+ID		 : [a-zA-Z] ([a-zA-Z0-9])*
 		 ;
 
 SC      : ';'
