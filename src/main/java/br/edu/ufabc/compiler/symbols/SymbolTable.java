@@ -4,12 +4,10 @@ import br.edu.ufabc.compiler.exception.SemanticException;
 import br.edu.ufabc.compiler.expression.Expression;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class SymbolTable {
 
     private final HashMap<String, Identifier> symbols;
-
     public SymbolTable() {
         this.symbols = new HashMap<>();
     }
@@ -24,9 +22,10 @@ public class SymbolTable {
         this.symbols.put(name, new Identifier(name, type));
     }
 
-    public void setVariableValue(String name, Expression expression){
+    public void assignValue(String name, Expression expression){
         Identifier identifier = get(name);
-        this.symbols.put(name, new Identifier(identifier.getName(), identifier.getType(), expression.eval()));
+        String stringValue = expression.eval();
+        this.symbols.put(name, new Identifier(identifier.getName(), identifier.getType(), new ValidTypeValue(identifier, stringValue)));
     }
 
     public void checkUsage(String name){

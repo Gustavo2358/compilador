@@ -5,9 +5,9 @@ import java.util.Optional;
 public class Identifier{
     private final String name;
     private final DataType type;
-    private final String value;
+    private final ValidTypeValue value;
 
-    public Identifier(String name, DataType type, String value) {
+    public Identifier(String name, DataType type, ValidTypeValue value) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -24,7 +24,7 @@ public class Identifier{
         return type;
     }
 
-    public Optional<String> getValue() {
+    public Optional<ValidTypeValue> getValue() {
         return Optional.ofNullable(value);
     }
 

@@ -86,7 +86,7 @@ cmdAttr  : ID{
            |
            TEXTO { expression = new TextExpression(_input.LT(-1).getText()); })
             {
-                symbolTable.setVariableValue(idAtribuido, expression);
+                symbolTable.assignValue(idAtribuido, expression);
                 expression = null;
             }
          ;
@@ -171,7 +171,7 @@ fator    : ID   {
                     listaDeTokens.add(_input.LT(-1).getText());
                     symbolTable.checkUsage(_input.LT(-1).getText());
                     Identifier id = symbolTable.get(_input.LT(-1).getText());
-                    expression = new IdentifierExpression(id.getValue().get());
+                    expression = new IdentifierExpression(id.getValue().orElseThrow().getStringValue());
 
                 }
          | num
@@ -197,12 +197,16 @@ TEXTO    : ["] .*? ["]
 
 num      : INTEGER { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText())); }
          | REAL { expression = new DoubleNumberExpression(Double.parseDouble(_input.LT(-1).getText())); }
+         //TODO Criar expressoes proprias para tratar os literais não decimais
+         | HEXADECIMAL { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(2), 16)); }
+         | BINARY { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(2), 2)); }
+         | OCTAL { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(1), 8)); }
          ;
 
-INTEGER  : [0-9]+
+INTEGER  : '0' | [1-9][0-9]*
          ;
 
-REAL     : [0-9]+ ('.' [0-9]+)?
+REAL     : ('0.' | [1-9])+ ('.' [0-9]+)?
 		 ;
 
 LOGICO   : 'VERDADEIRO' | 'FALSO'
@@ -210,6 +214,13 @@ LOGICO   : 'VERDADEIRO' | 'FALSO'
 
 ID		 : [a-zA-Z] ([a-zA-Z0-9])*
 		 ;
+
+HEXADECIMAL : ('0x' | '0X')([0-9A-F])+
+            ;
+BINARY      : ('0b' | '0B')[0-1]+
+            ;
+OCTAL       : ('0')[0-7]+
+            ;
 
 SC      : ';'
          ;
