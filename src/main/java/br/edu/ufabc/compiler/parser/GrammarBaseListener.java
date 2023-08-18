@@ -1,7 +1,8 @@
 // Generated from Grammar.g4 by ANTLR 4.13.0
 package br.edu.ufabc.compiler.parser;
 
-	import java.util.ArrayList;
+	import java.util.*;
+	import br.edu.ufabc.compiler.ast.*;
 	import br.edu.ufabc.compiler.symbols.*;
 	import br.edu.ufabc.compiler.expression.*;
 

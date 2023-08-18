@@ -1,7 +1,8 @@
 grammar Grammar;
 
 @header{
-	import java.util.ArrayList;
+	import java.util.*;
+	import br.edu.ufabc.compiler.ast.*;
 	import br.edu.ufabc.compiler.symbols.*;
 	import br.edu.ufabc.compiler.expression.*;
 
@@ -16,6 +17,8 @@ grammar Grammar;
     private Expression expression;
     private String idAtribuido;
     private String text;
+    private Program program = new Program();
+    private Stack<List<Command>> stack = new Stack<List<Command>>();
 
 	public void exibirTodosTokens(){
 		for(String s: listaDeTokens){
@@ -28,7 +31,15 @@ grammar Grammar;
 	}
 }
 
-prog     : 'programa' declara? bloco? 'fimprog.'
+prog     : 'programa'
+            {
+                program.setSymbolTable(symbolTable);
+                stack.push(new ArrayList<Command>());
+            }
+            declara? bloco? 'fimprog.'
+            {
+                program.setComandos(stack.pop());
+            }
          ;
 
 declara  : (declaravar)+
@@ -91,7 +102,23 @@ cmdAttr  : ID{
             }
          ;
 
-cmdIf    : 'se' AP exprBool FP '{' bloco '}' ('senao' '{' bloco '}')?
+cmdIf    : 'se'
+            {
+				stack.push(new ArrayList<Command>());
+				CmdIf _cmdIf = new CmdIf();
+            }
+            AP
+            exprBool
+            FP {_cmdIf.setExpr(expression);}
+            '{' bloco {_cmdIf.setListaTrue(stack.pop());}
+             '}'
+            ('senao' '{' {stack.push(new ArrayList<Command>());}
+            bloco
+                {_cmdIf.setListaFalse(stack.pop());}
+            '}')?
+            {
+   				stack.peek().add(_cmdIf);
+   			}
          ;
 
 cmdWhile : 'enquanto' AP exprBool FP '{' bloco '}'

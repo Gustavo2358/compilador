@@ -2,6 +2,7 @@ package br.edu.ufabc.compiler.symbols;
 
 import br.edu.ufabc.compiler.exception.SemanticException;
 import br.edu.ufabc.compiler.expression.Expression;
+import org.antlr.runtime.RecognitionException;
 
 import java.util.HashMap;
 
@@ -34,7 +35,7 @@ public class SymbolTable {
     }
     public void checkDeclaration(String name){
         if(!exists(name))
-            throw new SemanticException(String.format("A variável '%s' não foi declarada.", name));
+           throw new SemanticException(String.format("A variável '%s' não foi declarada.", name));
     }
 
     public void checkInitialization(String name){

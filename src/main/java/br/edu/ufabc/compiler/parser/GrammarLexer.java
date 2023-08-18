@@ -1,7 +1,8 @@
 // Generated from Grammar.g4 by ANTLR 4.13.0
 package br.edu.ufabc.compiler.parser;
 
-	import java.util.ArrayList;
+	import java.util.*;
+	import br.edu.ufabc.compiler.ast.*;
 	import br.edu.ufabc.compiler.symbols.*;
 	import br.edu.ufabc.compiler.expression.*;
 
@@ -106,6 +107,8 @@ public class GrammarLexer extends Lexer {
 	    private Expression expression;
 	    private String idAtribuido;
 	    private String text;
+	    private Program program = new Program();
+	    private Stack<List<Command>> stack = new Stack<List<Command>>();
 
 		public void exibirTodosTokens(){
 			for(String s: listaDeTokens){

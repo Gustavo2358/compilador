@@ -1,20 +1,14 @@
 programa
 
-inteiro a;
-real b, c;
-texto texto1;
-logico bool1, bool2, bool3;
+inteiro a, b;
 
-c := 2 + 3 - (4 * (3 + 2.2*3));
 a := 1;
-b := c;
-bool1 := VERDADEIRO;
-bool1 := a > b && (c > b || c > b);
-bool2 := 1 >= 2;
-bool3 := VERDADEIRO || (FALSO && VERDADEIRO);
+b := 2;
 
-faca {
-    escreva(c);
-}enquanto(a > b && (c > b || b > a))
+se(a<b){
+    leia(a);
+} senao {
+    leia(b);
+}
 
 fimprog.
