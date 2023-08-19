@@ -10,14 +10,13 @@ public class CmdAttrib implements Command{
 
     @Override
     public String generateCode() {
-        // TODO Auto-generated method stub
-        return switch (id.getType()) {
-            case INTEIRO -> "int ";
-            case REAL -> "double ";
-            case TEXTO -> "String ";
-            case LOGICO -> "boolean ";
-        }
-        + id.getName() + " = " + expr.toString() + " ;\n";
+//        return switch (id.getType()) {
+//            case INTEIRO -> "int ";
+//            case REAL -> "double ";
+//            case TEXTO -> "String ";
+//            case LOGICO -> "boolean ";
+//        }
+        return id.getName() + " = " + expr.toString() + " ;\n";
     }
 
     public CmdAttrib(Identifier id, Expression expr) {

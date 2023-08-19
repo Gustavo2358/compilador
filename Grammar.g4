@@ -51,10 +51,23 @@ prog     : 'programa'
 declara  : (declaravar)+
          ;
 
-declaravar : tipo ID { symbolTable.declareVariable(_input.LT(-1).getText(), currentType); }
+declaravar : tipo ID
+            {
+                symbolTable.declareVariable(_input.LT(-1).getText(), currentType);
+                List<Identifier> ids = new ArrayList<>();
+                ids.add(symbolTable.get(_input.LT(-1).getText()));
+            }
             (COMMA
-                  ID { symbolTable.declareVariable(_input.LT(-1).getText(), currentType); }
+                  ID
+                  {
+                      symbolTable.declareVariable(_input.LT(-1).getText(), currentType);
+                      ids.add(symbolTable.get(_input.LT(-1).getText()));
+                  }
             )*SC
+            {
+                CmdDeclaration _cmdDeclaration = new CmdDeclaration(ids);
+                stack.peek().add(_cmdDeclaration);
+            }
            ;
 
 tipo     : 'real' { currentType = DataType.REAL; }
