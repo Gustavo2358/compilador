@@ -33,7 +33,7 @@ public class Program {
                               public static void main(String[] args){
                               """, filename.split("\\.")[0]));
             comandos.forEach(c -> {
-                System.out.print(c.generateCode());
+//                System.out.print(c.generateCode());
                 if(c instanceof CmdRead && !existReadCmd) {
                     strBuilder.append("Scanner sc = new Scanner(System.in);\n");
                     existReadCmd = true;

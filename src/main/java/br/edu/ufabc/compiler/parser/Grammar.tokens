@@ -30,6 +30,7 @@ COMMA=29
 WS=30
 AP=31
 FP=32
+SINGLE_LINE_COMMENT=33
 'programa'=1
 'fimprog.'=2
 'real'=3

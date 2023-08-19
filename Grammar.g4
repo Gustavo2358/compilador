@@ -113,24 +113,34 @@ cmdEscrita : 'escreva'
                     }
                     | ID
                     {
-                        symbolTable.checkUsage(_input.LT(-1).getText());
-                        Identifier id = symbolTable.get(_input.LT(-1).getText());
-                        if (id == null){
-                            throw new SemanticException("Undeclared Variable");
+                        try{
+                            symbolTable.checkUsage(_input.LT(-1).getText());
+                            Identifier id = symbolTable.get(_input.LT(-1).getText());
+                            if (id == null){
+                                throw new SemanticException("Undeclared Variable");
+                            }
+                            CmdWrite _write = new CmdWrite(id);
+                            stack.peek().add(_write);
+                        } catch(SemanticException e){
+                            notifyErrorListeners(e.getMessage());
                         }
-                        CmdWrite _write = new CmdWrite(id);
-                        stack.peek().add(_write);
                     }
             ) FP
            ;
 
 cmdAttr  : ID{
+                try{
                 symbolTable.checkDeclaration(_input.LT(-1).getText());
                 idAtribuido = _input.LT(-1).getText();
                 if (!symbolTable.exists(_input.LT(-1).getText())){
                     throw new SemanticException("Variável não declarada.");
                 }
                 leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
+                }catch(SemanticException e){
+                    notifyErrorListeners(e.getMessage());
+                    idAtribuido = null;
+                    leftDT = null;
+                }
              }
            ':='
            (
@@ -142,13 +152,22 @@ cmdAttr  : ID{
            |
            TEXTO { expression = new TextExpression(_input.LT(-1).getText()); })
             {
+                try{
                 symbolTable.assignValue(idAtribuido, expression);
 
                 System.out.println("EVAL ("+expression+") = "+expression.eval());
 
                 CmdAttrib _attr = new CmdAttrib(symbolTable.get(idAtribuido), expression);
                 stack.peek().add(_attr);
+                }catch(SemanticException e){
+                    //notificar somente se existir uma variável
+                    if(idAtribuido != null)
+                        notifyErrorListeners(e.getMessage());
+                }catch(NullPointerException e){
+                    //nao faz nada
+                }finally{
                 expression = null;
+                }
             }
 
          ;
@@ -267,11 +286,14 @@ termol   : OP_MULT {
           ;
 
 fator    : ID   {
-                    listaDeTokens.add(_input.LT(-1).getText());
-                    symbolTable.checkUsage(_input.LT(-1).getText());
-                    Identifier id = symbolTable.get(_input.LT(-1).getText());
-                    expression = new IdentifierExpression(id);
-
+                    try{
+                        listaDeTokens.add(_input.LT(-1).getText());
+                        symbolTable.checkUsage(_input.LT(-1).getText());
+                        Identifier id = symbolTable.get(_input.LT(-1).getText());
+                        expression = new IdentifierExpression(id);
+                    } catch(SemanticException e){
+                        notifyErrorListeners(e.getMessage());
+                    }
                 }
          | num
          | AP expr FP
@@ -335,3 +357,12 @@ AP       : '('
 
 FP       : ')'
          ;
+
+SINGLE_LINE_COMMENT : '#' ~[\r\n]* -> skip
+                    ;
+
+balancedParentheses
+    : AP balancedParentheses FP
+    | AP FP
+    | balancedParentheses balancedParentheses
+    ;

@@ -19,11 +19,12 @@ public class SymbolTable {
 
     public void declareVariable(String name, DataType type) {
         if(exists(name))
-            throw new SemanticException(String.format("A variável '%s' ja foi definida.", name));
+            throw new SemanticException(String.format("A variável '%s' ja foi declarada.", name));
         this.symbols.put(name, new Identifier(name, type));
     }
 
     public void assignValue(String name, Expression expression){
+        checkDeclaration(name);
         Identifier identifier = get(name);
         String stringValue = expression.eval();
         this.symbols.put(name, new Identifier(identifier.getName(), identifier.getType(), new ValidTypeValue(identifier, stringValue)));

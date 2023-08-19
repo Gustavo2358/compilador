@@ -10,6 +10,7 @@ import br.edu.ufabc.compiler.parser.GrammarLexer;
 import br.edu.ufabc.compiler.parser.GrammarParser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,7 +23,7 @@ public class Main {
 
             // crio o lexer a partir da leitura do arquivo de entrada
             lexer = new GrammarLexer(CharStreams.fromFileName("input.expr"));
-            lexer.removeErrorListeners(); // Remove the default ConsoleErrorListener from the lexer
+            lexer.removeErrorListeners();
             lexer.addErrorListener(errorListener);
 
             // crio o TokenStream (o fluxo de tokens) a partir do lexer
@@ -30,7 +31,7 @@ public class Main {
 
             // crio o parser a partir do tokenStream
             parser = new GrammarParser(tokenStream);
-            parser.removeErrorListeners(); // Remove the default ConsoleErrorListener
+            parser.removeErrorListeners();
             parser.addErrorListener(errorListener);
 
             parser.prog();
@@ -38,9 +39,10 @@ public class Main {
             //TODO lançar excessoes com todos os erros para ser enviado para a API
             List<String> errors = errorListener.getErrors();
             if (!errors.isEmpty()) {
-                for (String error : errors) {
-                    System.out.println(error);
-                }
+                String strErr = errors.stream()
+                        .map(e -> e + "\n")
+                        .collect(Collectors.joining());
+                throw new Exception(strErr);
             }
 
             System.out.println("Compilation Success - Good Job!");
@@ -51,9 +53,12 @@ public class Main {
         catch(SemanticException | TypeException  e){
             System.err.println("Compilation Fail");
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            System.err.println("Compilation Fail");
+            System.err.println(e.getMessage());
+//            e.printStackTrace();
         }
     }
 }

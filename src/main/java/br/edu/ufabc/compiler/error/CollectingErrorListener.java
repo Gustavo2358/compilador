@@ -16,6 +16,8 @@ public class CollectingErrorListener extends BaseErrorListener {
         errors.add(error);
     }
 
+
+
     public List<String> getErrors() {
         return errors;
     }

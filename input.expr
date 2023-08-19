@@ -7,11 +7,17 @@ texto t;
 
 t := "teste";
 
+# use o simbolo '#' para comentários de linha
+#e := a;
+
 a := 2 * (1 + 3)//2;
 b := 2;
 
 leia(a);
 leia(b);
+
+#d := VERDADEIRO;
+#enquanto(d){a:=1;}
 
 d := a>b && (1<3 || 2 < 4);
 

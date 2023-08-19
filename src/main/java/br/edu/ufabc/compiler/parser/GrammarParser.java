@@ -29,7 +29,7 @@ public class GrammarParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, OP_ADD=16, 
 		OP_MULT=17, OP_REL=18, OP_BOOL=19, TEXTO=20, INTEGER=21, REAL=22, LOGICO=23, 
 		ID=24, HEXADECIMAL=25, BINARY=26, OCTAL=27, SC=28, COMMA=29, WS=30, AP=31, 
-		FP=32;
+		FP=32, SINGLE_LINE_COMMENT=33;
 	public static final int
 		RULE_prog = 0, RULE_declara = 1, RULE_declaravar = 2, RULE_tipo = 3, RULE_bloco = 4, 
 		RULE_cmd = 5, RULE_cmdLeitura = 6, RULE_cmdEscrita = 7, RULE_cmdAttr = 8, 
@@ -60,7 +60,7 @@ public class GrammarParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, "OP_ADD", "OP_MULT", "OP_REL", "OP_BOOL", "TEXTO", 
 			"INTEGER", "REAL", "LOGICO", "ID", "HEXADECIMAL", "BINARY", "OCTAL", 
-			"SC", "COMMA", "WS", "AP", "FP"
+			"SC", "COMMA", "WS", "AP", "FP", "SINGLE_LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -698,13 +698,17 @@ public class GrammarParser extends Parser {
 				setState(114);
 				match(ID);
 
-				                        symbolTable.checkUsage(_input.LT(-1).getText());
-				                        Identifier id = symbolTable.get(_input.LT(-1).getText());
-				                        if (id == null){
-				                            throw new SemanticException("Undeclared Variable");
+				                        try{
+				                            symbolTable.checkUsage(_input.LT(-1).getText());
+				                            Identifier id = symbolTable.get(_input.LT(-1).getText());
+				                            if (id == null){
+				                                throw new SemanticException("Undeclared Variable");
+				                            }
+				                            CmdWrite _write = new CmdWrite(id);
+				                            stack.peek().add(_write);
+				                        } catch(SemanticException e){
+				                            notifyErrorListeners(e.getMessage());
 				                        }
-				                        CmdWrite _write = new CmdWrite(id);
-				                        stack.peek().add(_write);
 				                    
 				}
 				break;
@@ -760,12 +764,18 @@ public class GrammarParser extends Parser {
 			setState(120);
 			match(ID);
 
+			                try{
 			                symbolTable.checkDeclaration(_input.LT(-1).getText());
 			                idAtribuido = _input.LT(-1).getText();
 			                if (!symbolTable.exists(_input.LT(-1).getText())){
 			                    throw new SemanticException("Variável não declarada.");
 			                }
 			                leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
+			                }catch(SemanticException e){
+			                    notifyErrorListeners(e.getMessage());
+			                    idAtribuido = null;
+			                    leftDT = null;
+			                }
 			             
 			setState(122);
 			match(T__8);
@@ -800,13 +810,22 @@ public class GrammarParser extends Parser {
 				break;
 			}
 
+			                try{
 			                symbolTable.assignValue(idAtribuido, expression);
 
 			                System.out.println("EVAL ("+expression+") = "+expression.eval());
 
 			                CmdAttrib _attr = new CmdAttrib(symbolTable.get(idAtribuido), expression);
 			                stack.peek().add(_attr);
+			                }catch(SemanticException e){
+			                    //notificar somente se existir uma variável
+			                    if(idAtribuido != null)
+			                        notifyErrorListeners(e.getMessage());
+			                }catch(NullPointerException e){
+			                    //nao faz nada
+			                }finally{
 			                expression = null;
+			                }
 			            
 			}
 		}
@@ -1541,11 +1560,14 @@ public class GrammarParser extends Parser {
 				setState(234);
 				match(ID);
 
-				                    listaDeTokens.add(_input.LT(-1).getText());
-				                    symbolTable.checkUsage(_input.LT(-1).getText());
-				                    Identifier id = symbolTable.get(_input.LT(-1).getText());
-				                    expression = new IdentifierExpression(id);
-
+				                    try{
+				                        listaDeTokens.add(_input.LT(-1).getText());
+				                        symbolTable.checkUsage(_input.LT(-1).getText());
+				                        Identifier id = symbolTable.get(_input.LT(-1).getText());
+				                        expression = new IdentifierExpression(id);
+				                    } catch(SemanticException e){
+				                        notifyErrorListeners(e.getMessage());
+				                    }
 				                
 				}
 				break;
@@ -1670,7 +1692,7 @@ public class GrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001 \u0100\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001!\u0100\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+

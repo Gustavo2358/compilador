@@ -71,8 +71,6 @@ public class BinaryExpression implements Expression {
     }
 
     public String toString() {
-//        String left = isBooleanExpression(leftSide) ? "("+leftSide+")" : leftSide.toString() ;
-//        String right = isBooleanExpression(rightSide) ? "("+rightSide+")" : rightSide.toString() ;
         String left = (leftSide instanceof BinaryExpression ||
                 leftSide instanceof BooleanExpression) ? "("+leftSide+")" : leftSide.toString() ;
         String right = (rightSide instanceof BinaryExpression ||
