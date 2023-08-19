@@ -1,18 +1,20 @@
 package br.edu.ufabc.compiler.expression;
 
-public class IdentifierExpression implements Expression {
-    private String value;
+import br.edu.ufabc.compiler.symbols.Identifier;
 
-    public IdentifierExpression(String value) {
-        this.value = value;
+public class IdentifierExpression implements Expression {
+    private Identifier id;
+
+    public IdentifierExpression(Identifier id) {
+        this.id = id;
     }
 
     @Override
     public String eval() {
-        return value;
+        return id.getValue().orElseThrow().getStringValue();
     }
 
     public String toString(){
-        return value;
+        return id.getName();
     }
 }

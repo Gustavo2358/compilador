@@ -172,10 +172,31 @@ cmdIf    : 'se'
    			}
          ;
 
-cmdWhile : 'enquanto' AP exprBool FP '{' bloco '}'
+cmdWhile : 'enquanto'
+            {
+				stack.push(new ArrayList<Command>());
+				CmdWhile _cmdWhile = new CmdWhile();
+            }
+            AP
+            exprBool
+            FP {_cmdWhile.setExpr(expression);}
+            '{' bloco {_cmdWhile.setLista(stack.pop());}
+            '}'
+            {
+                stack.peek().add(_cmdWhile);
+            }
          ;
 
-cmdDoWhile : 'faca' '{' bloco '}' 'enquanto' AP exprBool FP
+cmdDoWhile : 'faca'
+             {
+				stack.push(new ArrayList<Command>());
+				CmdWhile _cmdWhile = new CmdDoWhile();
+             }
+             '{' bloco {_cmdWhile.setLista(stack.pop());}
+             '}' 'enquanto' AP exprBool FP SC{_cmdWhile.setExpr(expression);}
+             {
+                stack.peek().add(_cmdWhile);
+             }
            ;
 
 exprBool : (exprBooll) (
@@ -249,7 +270,7 @@ fator    : ID   {
                     listaDeTokens.add(_input.LT(-1).getText());
                     symbolTable.checkUsage(_input.LT(-1).getText());
                     Identifier id = symbolTable.get(_input.LT(-1).getText());
-                    expression = new IdentifierExpression(id.getValue().orElseThrow().getStringValue());
+                    expression = new IdentifierExpression(id);
 
                 }
          | num
@@ -275,7 +296,7 @@ TEXTO    : ["] .*? ["]
 
 num      : INTEGER { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText())); }
          | REAL { expression = new DoubleNumberExpression(Double.parseDouble(_input.LT(-1).getText())); }
-         //TODO Criar expressoes proprias para tratar os literais não decimais
+         //TODO Criar expressoes apropriadas para tratar os literais não decimais
          | HEXADECIMAL { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(2), 16)); }
          | BINARY { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(2), 2)); }
          | OCTAL { expression = new IntegerNumberExpression(Integer.parseInt(_input.LT(-1).getText().substring(1), 8)); }

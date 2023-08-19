@@ -10,13 +10,7 @@ public class CmdAttrib implements Command{
 
     @Override
     public String generateCode() {
-//        return switch (id.getType()) {
-//            case INTEIRO -> "int ";
-//            case REAL -> "double ";
-//            case TEXTO -> "String ";
-//            case LOGICO -> "boolean ";
-//        }
-        return id.getName() + " = " + expr.toString() + " ;\n";
+        return id.getName() + " = " + expr.toString().replace("//", "/") + " ;\n";
     }
 
     public CmdAttrib(Identifier id, Expression expr) {

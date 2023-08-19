@@ -14,6 +14,8 @@ public class Program {
     private List<Command> comandos;
     private SymbolTable symbolTable;
 
+    private boolean existReadCmd;
+
     public Program() {
         this.filename = "Main.java";
         this.comandos = new ArrayList<>();
@@ -32,8 +34,13 @@ public class Program {
                               """, filename.split("\\.")[0]));
             comandos.forEach(c -> {
                 System.out.print(c.generateCode());
+                if(c instanceof CmdRead && !existReadCmd) {
+                    strBuilder.append("Scanner sc = new Scanner(System.in);\n");
+                    existReadCmd = true;
+                }
                 strBuilder.append(c.generateCode());
             });
+            if(existReadCmd) strBuilder.append("sc.close();\n");
             strBuilder.append("""
                     }
                     }

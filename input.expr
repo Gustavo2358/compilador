@@ -3,17 +3,32 @@ programa
 inteiro a, b;
 real c;
 logico d;
+texto t;
 
-a := 1;
+t := "teste";
+
+a := 2 * (1 + 3)//2;
 b := 2;
+
+leia(a);
+leia(b);
 
 d := a>b && (1<3 || 2 < 4);
 
 se(a<b && (1<3 || 2 < 4)){
-    leia(a);
+    escreva(a);
 } senao {
-    leia(c);
+    escreva(b);
 }
-escreva(a);
-escreva(b);
+
+enquanto(a < b){
+    a := a + 1;
+    escreva(t);
+}
+
+faca {
+    a := a +1;
+    escreva("teste 2");
+}enquanto (a < b);
+
 fimprog.

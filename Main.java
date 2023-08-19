@@ -1,24 +1,37 @@
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        int a, b;
-        double c;
-        boolean d;
-        a = 1;
-        b = 2;
-        d = 1 > 2 && (1 < 3 || 2 < 4);
-        if (1 < 2 && (1 < 3 || 2 < 4)) {
-            Scanner sc = new Scanner(System.in);
-            a = sc.nextInt();
-            sc.close();
-        } else {
-            Scanner sc = new Scanner(System.in);
-            c = sc.nextDouble();
-            sc.close();
-        }
-        System.out.println(a);
-        System.out.println(b);
-    }
+public class Main{
+public static void main(String[] args){
+int a, b;
+double c;
+boolean d;
+String t;
+t = "teste" ;
+a = (2*(1+3))/2 ;
+b = 2 ;
+Scanner sc = new Scanner(System.in);
+a = sc.nextInt();
+b = sc.nextInt();
+d = (a>b)&&((1<3)||(2<4)) ;
+if ((a<b)&&((1<3)||(2<4))) {
+ System.out.println(a);
+
+}
+else {
+System.out.println(b);
+
+}
+while (a<b) {
+ a = a+1 ;
+System.out.println(t);
+
+}
+do {
+ a = a+1 ;
+System.out.println("teste 2");
+
+} while(a<b); 
+sc.close();
+}
 }
 
