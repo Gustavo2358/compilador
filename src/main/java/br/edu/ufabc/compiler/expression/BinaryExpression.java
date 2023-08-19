@@ -71,7 +71,14 @@ public class BinaryExpression implements Expression {
     }
 
     public String toString() {
-        return leftSide.toString() + operator + rightSide.toString();
+        String left = isBooleanExpression(leftSide) ? "("+leftSide+")" : leftSide.toString() ;
+        String right = isBooleanExpression(rightSide) ? "("+rightSide+")" : rightSide.toString() ;
+        return left + operator + right;
+    }
+
+    private boolean isBooleanExpression(Expression expression){
+        return expression.toString().contains("&&") ||
+            expression.toString().contains("||");
     }
     public void setLeftSide(Expression leftSide) {
         this.leftSide = leftSide;

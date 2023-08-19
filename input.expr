@@ -1,14 +1,19 @@
 programa
 
 inteiro a, b;
+real c;
+logico d;
 
 a := 1;
 b := 2;
 
-se(a<b){
+d := a>b && (1<3 || 2 < 4);
+
+se(a<b && (1<3 || 2 < 4)){
     leia(a);
 } senao {
-    leia(b);
+    leia(c);
 }
-
+escreva(a);
+escreva(b);
 fimprog.

@@ -5,6 +5,7 @@ package br.edu.ufabc.compiler.parser;
 	import br.edu.ufabc.compiler.ast.*;
 	import br.edu.ufabc.compiler.symbols.*;
 	import br.edu.ufabc.compiler.expression.*;
+	import br.edu.ufabc.compiler.exception.*;
 
 
 import org.antlr.v4.runtime.Lexer;
@@ -119,6 +120,11 @@ public class GrammarLexer extends Lexer {
 		public void exibirSimbolos(){
 		    System.out.println(symbolTable);
 		}
+
+		public void generateObjectCode(){
+			program.generateTarget();
+		}
+
 
 
 	public GrammarLexer(CharStream input) {

@@ -5,6 +5,7 @@ grammar Grammar;
 	import br.edu.ufabc.compiler.ast.*;
 	import br.edu.ufabc.compiler.symbols.*;
 	import br.edu.ufabc.compiler.expression.*;
+	import br.edu.ufabc.compiler.exception.*;
 
 }
 
@@ -29,6 +30,11 @@ grammar Grammar;
 	public void exibirSimbolos(){
 	    System.out.println(symbolTable);
 	}
+
+	public void generateObjectCode(){
+		program.generateTarget();
+	}
+
 }
 
 prog     : 'programa'
@@ -71,20 +77,46 @@ cmd      : cmdLeitura SC
 
 cmdLeitura : 'leia'
             AP
-            ID { symbolTable.checkDeclaration(_input.LT(-1).getText()); }
+            ID
+            {
+                symbolTable.checkDeclaration(_input.LT(-1).getText());
+                Identifier id = symbolTable.get(_input.LT(-1).getText());
+                if (id == null){
+                    throw new SemanticException("Undeclared Variable");
+                }
+                CmdRead _read = new CmdRead(id);
+                stack.peek().add(_read);
+            }
             FP
            ;
 
 cmdEscrita : 'escreva'
             AP (
                     TEXTO
-                    | ID { symbolTable.checkUsage(_input.LT(-1).getText()); }
+                    {
+                        CmdWrite _write = new CmdWrite(_input.LT(-1).getText());
+                        stack.peek().add(_write);
+
+                    }
+                    | ID
+                    {
+                        symbolTable.checkUsage(_input.LT(-1).getText());
+                        Identifier id = symbolTable.get(_input.LT(-1).getText());
+                        if (id == null){
+                            throw new SemanticException("Undeclared Variable");
+                        }
+                        CmdWrite _write = new CmdWrite(id);
+                        stack.peek().add(_write);
+                    }
             ) FP
            ;
 
 cmdAttr  : ID{
                 symbolTable.checkDeclaration(_input.LT(-1).getText());
                 idAtribuido = _input.LT(-1).getText();
+                if (!symbolTable.exists(_input.LT(-1).getText())){
+                    throw new SemanticException("Variável não declarada.");
+                }
                 leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
              }
            ':='
@@ -98,8 +130,14 @@ cmdAttr  : ID{
            TEXTO { expression = new TextExpression(_input.LT(-1).getText()); })
             {
                 symbolTable.assignValue(idAtribuido, expression);
+
+                System.out.println("EVAL ("+expression+") = "+expression.eval());
+
+                CmdAttrib _attr = new CmdAttrib(symbolTable.get(idAtribuido), expression);
+                stack.peek().add(_attr);
                 expression = null;
             }
+
          ;
 
 cmdIf    : 'se'

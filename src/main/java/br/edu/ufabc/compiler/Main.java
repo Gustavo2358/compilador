@@ -46,6 +46,7 @@ public class Main {
             System.out.println("Compilation Success - Good Job!");
 //            parser.exibirTodosTokens();
             parser.exibirSimbolos();
+            parser.generateObjectCode();
         }
         catch(SemanticException | TypeException  e){
             System.err.println("Compilation Fail");

@@ -15,8 +15,8 @@ public class Program {
     private SymbolTable symbolTable;
 
     public Program() {
-        this.filename = "output.java";
-        this.comandos = new ArrayList<Command>();
+        this.filename = "Main.java";
+        this.comandos = new ArrayList<>();
     }
 
     public void generateTarget() {
@@ -24,10 +24,20 @@ public class Program {
             FileWriter fw = new FileWriter(filename);
             PrintWriter pw = new PrintWriter(fw);
             StringBuilder strBuilder = new StringBuilder();
+            strBuilder.append(String.format("""
+                              import java.util.Scanner;
+                              
+                              public class %s{
+                              public static void main(String[] args){
+                              """, filename.split("\\.")[0]));
             comandos.forEach(c -> {
                 System.out.print(c.generateCode());
                 strBuilder.append(c.generateCode());
             });
+            strBuilder.append("""
+                    }
+                    }
+                    """);
             pw.println(strBuilder);
             pw.close();
             fw.close();
