@@ -26,16 +26,16 @@ public class CmdIf implements Command{
     }
 
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         StringBuilder str = new StringBuilder();
         StringBuilder str2 = new StringBuilder();
         for (Command cmd: listaTrue) {
-            str.append(cmd.generateCode());
+            str.append(cmd.generateJavaCode());
         }
         if (listaFalse != null /*&& !listaFalse.isEmpty()*/) {
             str2.append("else {\n");
             for (Command cmd: listaFalse) {
-                str2.append(cmd.generateCode());
+                str2.append(cmd.generateJavaCode());
             }
             str2.append("\n}\n");
         }

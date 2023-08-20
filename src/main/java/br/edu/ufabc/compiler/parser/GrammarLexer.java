@@ -121,8 +121,8 @@ public class GrammarLexer extends Lexer {
 		    System.out.println(symbolTable);
 		}
 
-		public void generateObjectCode(){
-			program.generateTarget();
+		public String generateJavaCode(){
+			return program.generateJavaCode();
 		}
 
 

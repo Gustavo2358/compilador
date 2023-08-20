@@ -17,7 +17,6 @@ public class CollectingErrorListener extends BaseErrorListener {
     }
 
 
-
     public List<String> getErrors() {
         return errors;
     }

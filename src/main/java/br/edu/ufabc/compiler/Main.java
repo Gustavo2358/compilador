@@ -9,56 +9,32 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import br.edu.ufabc.compiler.parser.GrammarLexer;
 import br.edu.ufabc.compiler.parser.GrammarParser;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) {
+        String filePath = "input.isi";  // Replace with your file path
         try {
-            GrammarLexer lexer;
-            GrammarParser parser;
-
-            //Error listener customizado para coletar os erros.
-            CollectingErrorListener errorListener = new CollectingErrorListener();
-
-            // crio o lexer a partir da leitura do arquivo de entrada
-            lexer = new GrammarLexer(CharStreams.fromFileName("input.expr"));
-            lexer.removeErrorListeners();
-            lexer.addErrorListener(errorListener);
-
-            // crio o TokenStream (o fluxo de tokens) a partir do lexer
-            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-
-            // crio o parser a partir do tokenStream
-            parser = new GrammarParser(tokenStream);
-            parser.removeErrorListeners();
-            parser.addErrorListener(errorListener);
-
-            parser.prog();
-
-            //TODO lançar excessoes com todos os erros para ser enviado para a API
-            List<String> errors = errorListener.getErrors();
-            if (!errors.isEmpty()) {
-                String strErr = errors.stream()
-                        .map(e -> e + "\n")
-                        .collect(Collectors.joining());
-                throw new Exception(strErr);
-            }
-
-            System.out.println("Compilation Success - Good Job!");
-//            parser.exibirTodosTokens();
-            parser.exibirSimbolos();
-            parser.generateObjectCode();
-        }
-        catch(SemanticException | TypeException  e){
-            System.err.println("Compilation Fail");
-            System.err.println(e.getMessage());
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            generateTarget(new App().compileToJava(content), "Main.java");
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        catch(Exception e) {
-            System.err.println("Compilation Fail");
-            System.err.println(e.getMessage());
-//            e.printStackTrace();
+    }
+    private static void generateTarget(String source, String filename) {
+        try {
+            FileWriter fw = new FileWriter(filename);
+            PrintWriter pw = new PrintWriter(fw);
+            pw.println(source);
+            pw.close();
+            fw.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
+
 }

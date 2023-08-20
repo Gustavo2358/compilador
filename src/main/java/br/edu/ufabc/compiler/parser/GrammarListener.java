@@ -225,4 +225,14 @@ public interface GrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNum(GrammarParser.NumContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GrammarParser#balancedParentheses}.
+	 * @param ctx the parse tree
+	 */
+	void enterBalancedParentheses(GrammarParser.BalancedParenthesesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#balancedParentheses}.
+	 * @param ctx the parse tree
+	 */
+	void exitBalancedParentheses(GrammarParser.BalancedParenthesesContext ctx);
 }

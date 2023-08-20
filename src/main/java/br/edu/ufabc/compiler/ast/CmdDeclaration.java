@@ -15,7 +15,7 @@ public class CmdDeclaration implements Command {
     }
 
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         return ids.size() == 1 ?
                 generateVariableDeclarationCode() :
                 generateVariablesDeclarationCode();

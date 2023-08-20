@@ -19,7 +19,7 @@ public class CmdWrite implements Command {
     }
 
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         return "System.out.println(" + (id != null ? id.getName() : text) + ");\n";
     }
 

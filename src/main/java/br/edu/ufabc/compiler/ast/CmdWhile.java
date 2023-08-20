@@ -24,9 +24,9 @@ public class CmdWhile implements Command{
         this.lista = lista;
     }
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         StringBuilder str = new StringBuilder();
-        lista.forEach(command -> str.append(command.generateCode()));
+        lista.forEach(command -> str.append(command.generateJavaCode()));
         return "while (" + expr.toString()+ ") {\n "+ str + "\n}\n";
     }
 

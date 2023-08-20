@@ -9,7 +9,7 @@ public class CmdAttrib implements Command{
     private Expression expr;
 
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         return id.getName() + " = " + expr.toString().replace("//", "/") + " ;\n";
     }
 

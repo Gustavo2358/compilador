@@ -19,7 +19,7 @@ public class CmdRead implements Command {
 
 
     @Override
-    public String generateCode() {
+    public String generateJavaCode() {
         return switch (id.getType()){
             case INTEIRO -> id.getName() + " = " + "sc.nextInt();\n";
             case REAL -> id.getName() + " = " + "sc.nextDouble();\n";
